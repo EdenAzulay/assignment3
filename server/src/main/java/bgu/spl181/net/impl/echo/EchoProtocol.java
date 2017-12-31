@@ -1,9 +1,11 @@
 package bgu.spl181.net.impl.echo;
 
-import bgu.spl181.net.api.MessagingProtocol;
+import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
+import bgu.spl181.net.api.bidi.Connections;
+
 import java.time.LocalDateTime;
 
-public class EchoProtocol implements MessagingProtocol<String> {
+public class EchoProtocol implements BidiMessagingProtocol<String> {
 
     private boolean shouldTerminate = false;
 
@@ -22,5 +24,10 @@ public class EchoProtocol implements MessagingProtocol<String> {
     @Override
     public boolean shouldTerminate() {
         return shouldTerminate;
+    }
+
+    @Override
+    public void start(int connectionId, Connections<String> connections) {
+
     }
 }
