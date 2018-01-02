@@ -11,20 +11,7 @@ public class EchoProtocol implements BidiMessagingProtocol<String> {
     private boolean shouldTerminate = false;
 
     @Override
-    public String process(String msg) {
-        String command=msg.substring(0,msg.indexOf("<"));
-        Command<String> cm;
-        switch (command){
-            case "ACK": cm= new ACKCommand();
-            case "ERROR":cm= new ERRORCommand();
-            case "BROADCAST":cm=new BROADCASTCommand();
-            case "REGISTER":cm=new REGISTERCommand();
-            case "LOGIN": cm=new LOGINCommand();
-            case "SIGNOUT":cm=new SIGNOUTCommand();
-            case "REQUEST":cm=new REQUESTCommand();
-        }
-        return cm.execute();
-    }
+    public void process(String msg) { }
 
 /*
     private String createEcho(String message) {

@@ -4,26 +4,34 @@ import bgu.spl181.net.api.bidi.Connections;
 import bgu.spl181.net.impl.rci.*;
 import bgu.spl181.net.srv.*;
 
+import java.io.Serializable;
+import java.util.Map;
+
 public class MovieRentProtocol implements BidiMessagingProtocol {
     private boolean shouldTerminate=false;
-    public void start(int connectionId, Connections<String> connections){
-        boolean bol;
+    private int owner;
+
+    public void start(int connectionId, Connections connections){
+        owner=connectionId;
+        
     }
 
-    public void process(String msg){
+    public void process(Object message){
+       String msg=(String)message;
        String StrCommand=msg.substring(0,msg.indexOf('<'));
        String args=msg.substring(msg.indexOf('<'),msg.length());
-       Command<String> cm;
+       BaseCommand<String> cm = null;
         switch (StrCommand){
-            case "ACK": cm= new ACKCommand(args);
-            case "ERROR":cm= new ERRORCommand(args);
-            case "BROADCAST":cm=new BROADCASTCommand(args);
-            case "REGISTER":cm=new REGISTERCommand(args);
-            case "LOGIN": cm=new LOGINCommand(args);
-            case "SIGNOUT":cm=new SIGNOUTCommand(args);
-            case "REQUEST":cm=new REQUESTCommand(args);
+            case "ACK": cm= new ACKCommand();
+            case "ERROR":cm= new ERRORCommand();
+            case "BROADCAST":cm=new BROADCASTCommand();
+            case "REGISTER":cm=new REGISTERCommand();
+            case "LOGIN": cm=new LOGINCommand();
+            case "SIGNOUT":cm=new SIGNOUTCommand();
+            case "REQUEST":cm=new REQUESTCommand();
         }
-        return cm.execute();
+        if(cm!=null)
+            cm.execute(args);
     }
 
     /**
