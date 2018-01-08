@@ -3,7 +3,7 @@ package bgu.spl181.net.impl.echo;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
 import bgu.spl181.net.impl.rci.*;
-import bgu.spl181.net.srv.*;
+import bgu.spl181.net.srv.commands.*;
 
 public class EchoProtocol implements BidiMessagingProtocol<String> {
     private int owner; //TODO-should be initialized with 0?
