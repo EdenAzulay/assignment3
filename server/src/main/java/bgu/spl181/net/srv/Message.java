@@ -1,6 +1,6 @@
 package bgu.spl181.net.srv;
 
-import bgu.spl181.net.srv.Commands.*;
+import bgu.spl181.net.srv.commands.*;
 
 public class Message {
     private String type;

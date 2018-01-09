@@ -1,11 +1,6 @@
 package bgu.spl181.net.srv;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
-import bgu.spl181.net.api.bidi.MessagingProtocol;
-import bgu.spl181.net.srv.Commands.*;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class ServerProtocol implements BidiMessagingProtocol<Message> {
     private boolean shouldTerminate=false;

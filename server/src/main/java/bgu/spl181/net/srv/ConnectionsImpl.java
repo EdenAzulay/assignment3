@@ -4,7 +4,7 @@ import bgu.spl181.net.api.bidi.Connections;
 
 public class ConnectionsImpl implements Connections<Message> {
 
-    public boolean send(int connectionId, Message msg){}
+    public boolean send(int connectionId, Message msg){return false;}
 
     public void broadcast(Message msg){}
 
