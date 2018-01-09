@@ -51,6 +51,24 @@ public class _Connections<T> implements bgu.spl181.net.api.bidi.Connections<T> {
         this.connectedCientsCHMap.remove(connectionId);
     }
 
+    public void connectClient(int connectionId, ConnectionHandler<T> connectionHandler) {
+        this.connectedCientsCHMap.put(connectionId, connectionHandler);
+    }
+
+    public void connectClient(ConnectionHandler<T> connectionHandler) {
+        this.connectedCientsCHMap.put(generateConnectionId(), connectionHandler);
+    }
+
+    public int generateConnectionId(){
+        return this.connectionId.getAndIncrement();
+    }
+
+    public ConnectionHandler<T> getConnectionHandler(int connectionId){
+        return this.connectedCientsCHMap.get(connectionId);
+    }
+
+
+
 
 
 }
