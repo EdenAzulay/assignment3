@@ -16,6 +16,10 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
 
     public void process(String message){
 
+
+
+
+        connections.send(clientID,"answer");
 }
 
     /**
@@ -25,4 +29,5 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
         return shouldTerminate;
     }
 }
+
 

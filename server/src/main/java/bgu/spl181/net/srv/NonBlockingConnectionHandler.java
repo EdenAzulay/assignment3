@@ -49,9 +49,9 @@ public class NonBlockingConnectionHandler<T> implements java.io.Closeable {
                     while (buf.hasRemaining()) {
                         T nextMessage = encdec.decodeNextByte(buf.get());
                         if (nextMessage != null) {
-                            T response = protocol.process(nextMessage);
-                            if (response != null) {
-                                writeQueue.add(ByteBuffer.wrap(encdec.encode(response)));
+                            protocol.process(nextMessage);
+                            if (nextMessage != null) {
+                                writeQueue.add(ByteBuffer.wrap(encdec.encode(nextMessage)));
                                 reactor.updateInterestedOps(chan, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                             }
                         }
