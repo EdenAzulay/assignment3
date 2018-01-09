@@ -7,18 +7,25 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class _Connections<T> implements bgu.spl181.net.api.bidi.Connections<T> {
-    private ConcurrentHashMap<Integer,ConnectionHandler<T>> loggedInCHMap;
-    private AtomicInteger uniqueCnnectionId;
+    private ConcurrentHashMap<Integer,ConnectionHandler<T>> connectedCientsCHMap;
+    private AtomicInteger connectionId;
 
     public _Connections(){
-        this.loggedInCHMap = new ConcurrentHashMap<>();
-        this.uniqueCnnectionId = new AtomicInteger(0);
+        this.connectedCientsCHMap = new ConcurrentHashMap<>();
+        this.connectionId = new AtomicInteger(0);
     }
 
-
+    //send a message to a client represented by the given connectionId
     @Override
     public boolean send(int connectionId, T msg) {
-        return false;
+        boolean output = false;
+        ConnectionHandler<T> ch = connectedCientsCHMap.get(connectionId);
+
+        if (ch != null){
+            ch.send(msg);
+            output = true;
+        }
+        return output;
     }
 
     /*
@@ -31,7 +38,7 @@ public class _Connections<T> implements bgu.spl181.net.api.bidi.Connections<T> {
     //Send a message to all the logged in clients.
     @Override
     public void broadcast(T msg) {
-        for (Map.Entry<Integer, ConnectionHandler<T>> entry : loggedInCHMap.entrySet()) {
+        for (Map.Entry<Integer, ConnectionHandler<T>> entry : connectedCientsCHMap.entrySet()) {
             ConnectionHandler<T> ch = entry.getValue();
             ch.send(msg);
         }
@@ -41,9 +48,8 @@ public class _Connections<T> implements bgu.spl181.net.api.bidi.Connections<T> {
     //removes active client connId from map
     @Override
     public void disconnect(int connectionId) {
-
-
-        }
+        this.connectedCientsCHMap.remove(connectionId);
+    }
 
 
 
