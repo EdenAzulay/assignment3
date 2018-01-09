@@ -1,10 +1,8 @@
-package bgu.spl181.net.srv.Commands;
-
-import bgu.spl181.net.srv.BaseCommand;
+package bgu.spl181.net.srv.commands;
 
 import java.io.Serializable;
 
-public class BROADCASTCommand implements BaseCommand<String> {
+public class BROADCASTCommand<String> implements BaseCommand<String> {
     @Override
     public Serializable execute(String arg) {
         return null;

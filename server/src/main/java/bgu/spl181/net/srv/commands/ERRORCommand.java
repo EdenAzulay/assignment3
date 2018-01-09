@@ -1,13 +1,11 @@
-package bgu.spl181.net.srv.Commands;
+package bgu.spl181.net.srv.commands;
 
-import bgu.spl181.net.srv.BaseCommand;
 
 import java.io.Serializable;
 
-public class ERRORCommand implements BaseCommand<String> {
+public class ERRORCommand<String> implements BaseCommand<String> {
     @Override
     public Serializable execute(String arg) {
         return null;
     }
 }
-

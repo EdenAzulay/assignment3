@@ -1,4 +1,4 @@
-package bgu.spl181.net.srv;
+package bgu.spl181.net.srv.commands;
 
 import java.io.Serializable;
 
