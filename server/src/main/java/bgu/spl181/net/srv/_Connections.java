@@ -52,10 +52,6 @@ public class _Connections<T> implements Connections<T> {
         this.connectedClientsCHMap.remove(connectionId);
     }
 
-    public void connectClient(int connectionId, ConnectionHandler<T> connectionHandler) {
-        this.connectedClientsCHMap.put(connectionId, connectionHandler);
-    }
-
     public void connectClient(ConnectionHandler<T> connectionHandler) {
         this.connectedClientsCHMap.put(generateConnectionId(), connectionHandler);
     }
