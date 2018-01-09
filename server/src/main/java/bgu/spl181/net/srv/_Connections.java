@@ -53,11 +53,11 @@ public class _Connections<T> implements Connections<T> {
     }
 
     public void connectClient(int connectionId, ConnectionHandler<T> connectionHandler) {
-        this.connectedCientsCHMap.put(connectionId, connectionHandler);
+        this.connectedClientsCHMap.put(connectionId, connectionHandler);
     }
 
     public void connectClient(ConnectionHandler<T> connectionHandler) {
-        this.connectedCientsCHMap.put(generateConnectionId(), connectionHandler);
+        this.connectedClientsCHMap.put(generateConnectionId(), connectionHandler);
     }
 
     public int generateConnectionId(){
@@ -65,7 +65,7 @@ public class _Connections<T> implements Connections<T> {
     }
 
     public ConnectionHandler<T> getConnectionHandler(int connectionId){
-        return this.connectedCientsCHMap.get(connectionId);
+        return this.connectedClientsCHMap.get(connectionId);
     }
 
 
