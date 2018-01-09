@@ -1,16 +1,17 @@
 package bgu.spl181.net.srv;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
+import bgu.spl181.net.impl.BBreactor.ConnectionsImpl;
 
 public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<String> {
     private boolean shouldTerminate=false;
     private int clientID;
-    private _Connections connections;
+    private ConnectionsImpl connections;
     private MovieRentProtocol protocol;
 
     public void start(int connectionId, Connections<String> connections){
         clientID=connectionId;
-        this.connections=(_Connections)connections;
+        this.connections=(ConnectionsImpl)connections;
 
     }
 

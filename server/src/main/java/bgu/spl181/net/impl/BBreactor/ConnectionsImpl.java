@@ -1,4 +1,4 @@
-package bgu.spl181.net.srv;
+package bgu.spl181.net.impl.BBreactor;
 
 import bgu.spl181.net.api.bidi.ConnectionHandler;
 import bgu.spl181.net.api.bidi.Connections;
@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class _Connections<T> implements Connections<T> {
+public class ConnectionsImpl<T> implements Connections<T> {
     private ConcurrentHashMap<Integer,ConnectionHandler<T>> connectedClientsCHMap;
     private AtomicInteger connectionId;
 
-    public _Connections(){
+    public ConnectionsImpl(){
         this.connectedClientsCHMap = new ConcurrentHashMap<>();
         this.connectionId = new AtomicInteger(0);
     }

@@ -2,6 +2,8 @@ package bgu.spl181.net.srv;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
+import bgu.spl181.net.impl.BBreactor.BBReactor;
+import bgu.spl181.net.impl.BBtpc.BlockingConnectionHandler;
 
 import java.io.Closeable;
 import java.util.function.Supplier;
@@ -28,7 +30,7 @@ public interface Server<T> extends Closeable {
 
         return new BaseServer<T>(port, protocolFactory, encoderDecoderFactory) {
             @Override
-            protected void execute(BlockingConnectionHandler<T>  handler) {
+            protected void execute(BlockingConnectionHandler<T> handler) {
                 new Thread(handler).start();
             }
         };
@@ -49,7 +51,7 @@ public interface Server<T> extends Closeable {
             int port,
             Supplier<BidiMessagingProtocol<T>> protocolFactory,
             Supplier<MessageEncoderDecoder<T>> encoderDecoderFactory) {
-        return new Reactor<T>(nthreads, port, protocolFactory, encoderDecoderFactory);
+        return new BBReactor<T>(nthreads, port, protocolFactory, encoderDecoderFactory);
     }
 
 }

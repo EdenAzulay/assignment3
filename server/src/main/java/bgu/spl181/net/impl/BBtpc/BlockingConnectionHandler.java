@@ -1,4 +1,4 @@
-package bgu.spl181.net.srv;
+package bgu.spl181.net.impl.BBtpc;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
