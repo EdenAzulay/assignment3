@@ -1,17 +1,18 @@
 package bgu.spl181.net.srv;
 
 import bgu.spl181.net.api.bidi.ConnectionHandler;
+import bgu.spl181.net.api.bidi.Connections;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class _Connections<T> implements bgu.spl181.net.api.bidi.Connections<T> {
-    private ConcurrentHashMap<Integer,ConnectionHandler<T>> connectedCientsCHMap;
+public class _Connections<T> implements Connections<T> {
+    private ConcurrentHashMap<Integer,ConnectionHandler<T>> connectedClientsCHMap;
     private AtomicInteger connectionId;
 
     public _Connections(){
-        this.connectedCientsCHMap = new ConcurrentHashMap<>();
+        this.connectedClientsCHMap = new ConcurrentHashMap<>();
         this.connectionId = new AtomicInteger(0);
     }
 
@@ -19,7 +20,7 @@ public class _Connections<T> implements bgu.spl181.net.api.bidi.Connections<T> {
     @Override
     public boolean send(int connectionId, T msg) {
         boolean output = false;
-        ConnectionHandler<T> ch = connectedCientsCHMap.get(connectionId);
+        ConnectionHandler<T> ch = connectedClientsCHMap.get(connectionId);
 
         if (ch != null){
             ch.send(msg);
@@ -38,7 +39,7 @@ public class _Connections<T> implements bgu.spl181.net.api.bidi.Connections<T> {
     //Send a message to all the logged in clients.
     @Override
     public void broadcast(T msg) {
-        for (Map.Entry<Integer, ConnectionHandler<T>> entry : connectedCientsCHMap.entrySet()) {
+        for (Map.Entry<Integer, ConnectionHandler<T>> entry : connectedClientsCHMap.entrySet()) {
             ConnectionHandler<T> ch = entry.getValue();
             ch.send(msg);
         }
@@ -48,7 +49,7 @@ public class _Connections<T> implements bgu.spl181.net.api.bidi.Connections<T> {
     //removes active client connId from map
     @Override
     public void disconnect(int connectionId) {
-        this.connectedCientsCHMap.remove(connectionId);
+        this.connectedClientsCHMap.remove(connectionId);
     }
 
 

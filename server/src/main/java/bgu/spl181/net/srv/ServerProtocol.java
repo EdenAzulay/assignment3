@@ -2,23 +2,21 @@ package bgu.spl181.net.srv;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
 
-public class ServerProtocol implements BidiMessagingProtocol<Message> {
+public class ServerProtocol implements BidiMessagingProtocol<String> {
     private boolean shouldTerminate=false;
-    private int owner;
+    private int clientID;
+    private _Connections connections;
     private MovieRentProtocol protocol;
 
-    public void start(int connectionId, Connections<Message> connections){
-        owner=connectionId;
+    public void start(int connectionId, Connections<String> connections){
+        clientID=connectionId;
+        this.connections=(_Connections)connections;
 
     }
 
-    public void process(Message message){
-        String type=message.getType();
-        if(type.equals("General"))
-            message.execute();
-        else if(type.equals("Specific"))
-            protocol.process(message);
-    }
+    public void process(String message){
+
+}
 
     /**
      * @return true if the connection should be terminated
