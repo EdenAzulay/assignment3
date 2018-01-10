@@ -37,10 +37,7 @@ public class BlockingConnectionHandler<T> implements  Runnable, Closeable, Conne
                 T nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
                     protocol.process(nextMessage);
-                    if (nextMessage != null) {
-                        out.write(encdec.encode(nextMessage));
-                        out.flush();
-                    }
+
                 }
             }
 
@@ -58,6 +55,15 @@ public class BlockingConnectionHandler<T> implements  Runnable, Closeable, Conne
 
     @Override
     public void send(T msg) {
+        if (msg!= null && connected){
+            try {
+                byte[] byteMsg = encdec.encode(msg);
+                out.write(byteMsg);
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 }

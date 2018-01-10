@@ -20,10 +20,9 @@ public class ConnectionsImpl<T> implements Connections<T> {
     @Override
     public boolean send(int connectionId, T msg) {
         boolean output = false;
-        ConnectionHandler<T> ch = connectedClientsCHMap.get(connectionId);
-
-        if (ch != null){
-            ch.send(msg);
+        ConnectionHandler<T> connectionHandler = connectedClientsCHMap.get(connectionId);
+        if (connectionHandler != null){
+            connectionHandler.send(msg);
             output = true;
         }
         return output;
