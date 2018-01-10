@@ -3,11 +3,20 @@ import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
 import bgu.spl181.net.impl.BBreactor.ConnectionsImpl;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<String> {
     private boolean shouldTerminate=false;
     private int clientID;
     private ConnectionsImpl connections;
     private MovieRentProtocol protocol;
+
+    private ConcurrentHashMap<Integer, String> loggedInUsers;
+    private
+
+    public UserServiceTextBasedProtocol(){
+
+    }
 
     public void start(int connectionId, Connections<String> connections){
         clientID=connectionId;
