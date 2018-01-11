@@ -1,10 +1,18 @@
 package bgu.spl181.net.srv.commands;
 
+import bgu.spl181.net.impl.dbClasses.DbHandler;
+import bgu.spl181.net.srv.Result;
+
 import java.io.Serializable;
 
-public class REQUESTCommand<String> implements BaseCommand<String> {
+public class REQUESTCommand<String> extends BaseCommand{
+
+    public REQUESTCommand(DbHandler dbHandler) {
+        super(dbHandler);
+    }
+
     @Override
-    public Serializable execute(String arg) {
+    Result execute() {
         return null;
     }
 }

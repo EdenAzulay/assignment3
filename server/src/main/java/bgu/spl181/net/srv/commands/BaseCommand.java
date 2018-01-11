@@ -1,8 +1,16 @@
 package bgu.spl181.net.srv.commands;
 
+import bgu.spl181.net.impl.dbClasses.DbHandler;
+import bgu.spl181.net.srv.Result;
+
 import java.io.Serializable;
 
-public interface BaseCommand<T> extends Serializable {
+public abstract class BaseCommand {
+    protected DbHandler dbHandler;
 
-    Serializable execute(T arg);
+    public BaseCommand(DbHandler dbHandler) {
+        this.dbHandler = dbHandler;
+    }
+
+    abstract Result execute();
 }

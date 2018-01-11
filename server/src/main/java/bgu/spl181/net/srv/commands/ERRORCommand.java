@@ -1,11 +1,17 @@
 package bgu.spl181.net.srv.commands;
 
 
-import java.io.Serializable;
+import bgu.spl181.net.impl.dbClasses.DbHandler;
+import bgu.spl181.net.srv.Result;
 
-public class ERRORCommand<String> implements BaseCommand<String> {
+public class ERRORCommand<String> extends BaseCommand{
+
+    public ERRORCommand(DbHandler dbHandler) {
+        super(dbHandler);
+    }
+
     @Override
-    public Serializable execute(String arg) {
+    Result execute() {
         return null;
     }
 }

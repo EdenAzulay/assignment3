@@ -2,9 +2,9 @@ package bgu.spl181.net.srv;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
 import bgu.spl181.net.impl.BBreactor.ConnectionsImpl;
-import bgu.spl181.net.srv.commands.LOGINCommand;
-import bgu.spl181.net.srv.commands.REGISTERCommand;
-import bgu.spl181.net.srv.commands.SIGNOUTCommand;
+import bgu.spl181.net.srv.commands.LOGINCommandI;
+import bgu.spl181.net.srv.commands.REGISTERCommandI;
+import bgu.spl181.net.srv.commands.SIGNOUTCommandI;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,11 +29,11 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
 
     public void process(String message){
 
-        handleMessage(message);
+        Result result = handleMessage(message);
 
 
 
-
+        //todo::send result
 
         connections.send(clientID,"answer");
 }
@@ -60,7 +60,7 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
         switch (commandName) {
             //SIGNOUT
             case "SIGNOUT": {
-                SIGNOUTCommand command = new SIGNOUTCommand<>();
+                SIGNOUTCommandI command = new SIGNOUTCommandI<>();
                 executed = true;
                 command.execute();
             }
@@ -80,9 +80,10 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                         message =  message.substring(spaceIndex + 1);
                         dataBlock = message;
                     }
-                    REGISTERCommand command = new REGISTERCommand(userName,password,dataBlock);
+                    REGISTERCommandI command = new REGISTERCommandI(userName,password,dataBlock, db);
                     executed = true;
-                    command.execute();
+                    Result result = command.execute();
+                    return result;
                 }
             }
             //LOGIN <username> <password>
@@ -96,7 +97,7 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                     spaceIndex = message.indexOf(" ");
                     password = message.substring(0, spaceIndex);
 
-                    LOGINCommand command = new LOGINCommand(userName,password);
+                    LOGINCommandI command = new LOGINCommandI(userName,password);
                     executed = true;
                     command.execute();
                 }
