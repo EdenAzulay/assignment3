@@ -1,6 +1,5 @@
 package bgu.spl181.net.api.bidi;
 
-import java.io.IOException;
 
 public interface Connections<T> {
 

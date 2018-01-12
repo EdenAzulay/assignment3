@@ -1,6 +1,6 @@
-package bgu.spl181.net.impl.BBreactor;
+package bgu.spl181.net.srv.bidi;
 
-import bgu.spl181.net.api.bidi.ConnectionHandler;
+import bgu.spl181.net.srv.bidi.ConnectionHandler;
 import bgu.spl181.net.api.bidi.Connections;
 
 import java.util.Map;
@@ -41,7 +41,8 @@ public class ConnectionsImpl<T> implements Connections<T> {
     public void broadcast(T msg) {
         for (Map.Entry<Integer, ConnectionHandler<T>> entry : connectedClientsCHMap.entrySet()) {
             ConnectionHandler<T> ch = entry.getValue();
-            ch.send(msg);
+            if(ch!=null)
+                ch.send(msg);
         }
     }
 
@@ -51,9 +52,11 @@ public class ConnectionsImpl<T> implements Connections<T> {
     public void disconnect(int connectionId) {
         this.connectedClientsCHMap.remove(connectionId);
     }
+    //TODO- check if there is no need for closing the connection, just removing from list.
 
     public void connectClient(ConnectionHandler<T> connectionHandler) {
         this.connectedClientsCHMap.put(generateConnectionId(), connectionHandler);
+        //TODO- check if there is no need for a specific ID
     }
 
     public int generateConnectionId(){
@@ -63,7 +66,6 @@ public class ConnectionsImpl<T> implements Connections<T> {
     public ConnectionHandler<T> getConnectionHandler(int connectionId){
         return this.connectedClientsCHMap.get(connectionId);
     }
-
 
 
 

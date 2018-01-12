@@ -1,8 +1,7 @@
-package bgu.spl181.net.impl.BBreactor;
+package bgu.spl181.net.srv;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
-import bgu.spl181.net.impl.BBreactor.BBReactor;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,13 +19,13 @@ public class NonBlockingConnectionHandler<T> implements java.io.Closeable {
     private final MessageEncoderDecoder<T> encdec;
     private final Queue<ByteBuffer> writeQueue = new ConcurrentLinkedQueue<>();
     private final SocketChannel chan;
-    private final BBReactor reactor;
+    private final Reactor reactor;
 
     public NonBlockingConnectionHandler(
             MessageEncoderDecoder<T> reader,
             BidiMessagingProtocol<T> protocol,
             SocketChannel chan,
-            BBReactor reactor) {
+            Reactor reactor) {
         this.chan = chan;
         this.encdec = reader;
         this.protocol = protocol;
@@ -51,10 +50,12 @@ public class NonBlockingConnectionHandler<T> implements java.io.Closeable {
                         T nextMessage = encdec.decodeNextByte(buf.get());
                         if (nextMessage != null) {
                             protocol.process(nextMessage);
+/*
                             if (nextMessage != null) {
                                 writeQueue.add(ByteBuffer.wrap(encdec.encode(nextMessage)));
                                 reactor.updateInterestedOps(chan, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                             }
+*/
                         }
                     }
                 } finally {

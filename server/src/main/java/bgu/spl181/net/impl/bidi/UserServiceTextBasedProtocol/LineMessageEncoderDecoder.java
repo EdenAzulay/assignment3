@@ -1,11 +1,11 @@
-package bgu.spl181.net.srv;
+package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class MessageEncoderDecoderImpl implements MessageEncoderDecoder<String> {
+public class LineMessageEncoderDecoder implements MessageEncoderDecoder<String> {
     private byte[] bytes = new byte[1 << 10]; //start with 1k
     private int len = 0;
 

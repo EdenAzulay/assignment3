@@ -1,5 +1,6 @@
-package bgu.spl181.net.impl.BBreactor;
+package bgu.spl181.net.srv;
 
+import bgu.spl181.net.srv.NonBlockingConnectionHandler;
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.srv.ActorThreadPool;
@@ -15,7 +16,7 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
-public class BBReactor<T> implements Server<T> {
+public class Reactor<T> implements Server<T> {
 
     private final int port;
     private final Supplier<BidiMessagingProtocol<T>> protocolFactory;
@@ -26,7 +27,7 @@ public class BBReactor<T> implements Server<T> {
     private final ConcurrentLinkedQueue<Runnable> selectorTasks = new ConcurrentLinkedQueue<>();
 
 
-    public BBReactor(
+    public Reactor(
             int numThreads,
             int port,
             Supplier<BidiMessagingProtocol<T>> protocolFactory,
