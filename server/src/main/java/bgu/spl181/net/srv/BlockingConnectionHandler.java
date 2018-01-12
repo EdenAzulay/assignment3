@@ -1,8 +1,8 @@
-package bgu.spl181.net.srv;
+package bgu.spl181.net.impl.BBtpc;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
-import bgu.spl181.net.srv.bidi.ConnectionHandler;
+import bgu.spl181.net.api.bidi.ConnectionHandler;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -37,12 +37,7 @@ public class BlockingConnectionHandler<T> implements  Runnable, Closeable, Conne
                 T nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
                     protocol.process(nextMessage);
-/*
-                    if (nextMessage != null) {
-                        out.write(encdec.encode(nextMessage));
-                        out.flush();
-                    }
-*/
+
                 }
             }
 
@@ -60,6 +55,15 @@ public class BlockingConnectionHandler<T> implements  Runnable, Closeable, Conne
 
     @Override
     public void send(T msg) {
+        if (msg!= null && connected){
+            try {
+                byte[] byteMsg = encdec.encode(msg);
+                out.write(byteMsg);
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 }
