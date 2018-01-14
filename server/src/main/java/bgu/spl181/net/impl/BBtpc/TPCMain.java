@@ -1,12 +1,10 @@
 package bgu.spl181.net.impl.BBtpc;
 
-import bgu.spl181.net.impl.bidi.BBService.MovieService;
-import bgu.spl181.net.impl.bidi.IService;
 import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.LineMessageEncoderDecoder;
 import bgu.spl181.net.impl.dbClasses.MoviesJsonHandler;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
 import bgu.spl181.net.srv.Server;
-import bgu.spl181.net.srv.UserServiceTextBasedProtocol;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.UserServiceTextBasedProtocol;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;

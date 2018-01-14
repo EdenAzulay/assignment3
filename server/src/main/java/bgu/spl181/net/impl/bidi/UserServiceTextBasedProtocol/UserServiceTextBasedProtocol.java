@@ -1,13 +1,11 @@
-package bgu.spl181.net.srv;
+package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
 import bgu.spl181.net.srv.bidi.ConnectionsImpl;
-
-import bgu.spl181.net.srv.commands.LOGINCommand;
-
-import bgu.spl181.net.srv.commands.REGISTERCommand;
-
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands.REQUESTCommand;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands.REGISTERCommand;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands.LOGINCommand;
 
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,7 +69,7 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
             case "REGISTER": {
                 String result = "ERROR registration failed";
                 if (!isLogged) {
-                    REGISTERCommand command = new REGISTERCommand(messageArr, usersJsonHandler);
+                    REGISTERCommand command= new REGISTERCommand(messageArr, usersJsonHandler);
                     result = command.execute();
                 }
 

@@ -1,8 +1,7 @@
-package bgu.spl181.net.srv.commands;
+package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands;
 
 import bgu.spl181.net.impl.dbClasses.MoviesJsonHandler;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
-import bgu.spl181.net.srv.Result;
 
 public abstract class BaseCommand {
     protected MoviesJsonHandler moviesJsonHandler;

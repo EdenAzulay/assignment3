@@ -1,12 +1,11 @@
 package bgu.spl181.net.impl.dbClasses;
 
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
-
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 public class MoviesJsonHandler extends JsonHandler<Movie> {
     private final String ROOT_KEY = "movies";

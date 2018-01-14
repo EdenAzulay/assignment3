@@ -1,4 +1,4 @@
-package bgu.spl181.net.srv.commands;
+package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands;
 
 public class REQUESTCommand<String> extends BaseCommand{
 
