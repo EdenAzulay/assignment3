@@ -1,5 +1,7 @@
 package bgu.spl181.net.impl.BBtpc;
 
+import bgu.spl181.net.impl.bidi.BBService.MovieService;
+import bgu.spl181.net.impl.bidi.IService;
 import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.LineMessageEncoderDecoder;
 import bgu.spl181.net.impl.dbClasses.MoviesJsonHandler;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
@@ -27,14 +29,14 @@ public class TPCMain {
         ReadWriteLock userReadWriteLock = new ReentrantReadWriteLock();
 
         ConcurrentHashMap<String,String> loggedUsers=new ConcurrentHashMap();
-        UsersJsonHandler usersJsonHand=new UsersJsonHandler(usersDbPath,userReadWriteLock);
+        UsersJsonHandler usersJsonHandler=new UsersJsonHandler(usersDbPath,userReadWriteLock);
         MoviesJsonHandler moviesJsonHandler=new MoviesJsonHandler(moviesDbPath,movieReadWriteLock);
-       // IService movieService=new MovieService()
+        IService movieService=new MovieService(moviesJsonHandler,usersJsonHandler);
 
 
         Server.threadPerClient(
-                port, //port
-                () -> new UserServiceTextBasedProtocol(usersJsonHand, loggedUsers, movieRentalService), //protocol factory
+                port, //port //TODO-FIX THIS
+                () -> new UserServiceTextBasedProtocol(usersJsonHandler, loggedUsers, movieService),
                 LineMessageEncoderDecoder::new).serve();
     }
 

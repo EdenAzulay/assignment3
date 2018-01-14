@@ -1,4 +1,5 @@
-package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands;
+/*
+package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Commands;
 
 
 public class ERRORCommand<String> extends BaseCommand{
@@ -12,3 +13,4 @@ public class ERRORCommand<String> extends BaseCommand{
         return null;
     }
 }
+*/

@@ -1,11 +1,13 @@
 package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
+import bgu.spl181.net.impl.bidi.IService;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Commands.BaseCommand;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Commands.REQUESTCommand;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
 import bgu.spl181.net.srv.bidi.ConnectionsImpl;
-import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands.REQUESTCommand;
-import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands.REGISTERCommand;
-import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands.LOGINCommand;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Commands.REGISTERCommand;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Commands.LOGINCommand;
 
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,16 +18,17 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
     private ConnectionsImpl connections;
     //private MovieRentProtocol protocol;
     private boolean isLogged;
-    private String logginUser;
-    private String commandName;
-    UsersJsonHandler usersJsonHandler;
-    ConcurrentHashMap<String,String> loggedUsers;
+    private String logginUserName;
+    private UsersJsonHandler usersJsonHandler;
+    private ConcurrentHashMap<String,String> loggedUsers;
+    private IService service;
 
-    public UserServiceTextBasedProtocol(UsersJsonHandler usersJsonHandler, ConcurrentHashMap<String,String> loggedUsers){
+    public UserServiceTextBasedProtocol(UsersJsonHandler usersJsonHandler, ConcurrentHashMap<String,String> loggedUsers, IService service){
         this.loggedUsers=loggedUsers;
         this.usersJsonHandler = usersJsonHandler;
         isLogged=false;
-        logginUser="";
+        logginUserName="";
+        this.service=service;
     }
 
     public void start(int connectionId, Connections<String> connections){
@@ -36,17 +39,15 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
 
     public void process(String message){
 
-        Result result = handleMessage(message);
-
-
-
-        //todo::send result
-
+        String result = handleMessage(message);
         connections.send(clientID,"answer");
-}
-    private Result handleMessage(String message) {
 
+}
+    private String handleMessage(String message) {
+        String commandName=null;
+        String result=null;
         String[] messageArr = message.split("\\s+");
+        BaseCommand command=null;
 
         if(message.length()>0){
             commandName = messageArr[0];
@@ -57,33 +58,36 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
             case "SIGNOUT": {
                 if (messageArr.length == 1 && isLogged){
                     isLogged = false;
-                    loggedUsers.remove(logginUser);
-                    logginUser = "";
+                    loggedUsers.remove(logginUserName);
+                    logginUserName = "";
                     connections.send(this.clientID, "ACK signout succeeded");
                 }
                 else{
                     connections.send(this.clientID, "ERROR signout failed");
                 }
+                //TODO-CHECK WHAT SHOULD BE RESULT
             }
-            //REGISTER <username> <password> [Data block,…]
+
+
             case "REGISTER": {
-                String result = "ERROR registration failed";
+                result = "ERROR registration failed";
                 if (!isLogged) {
-                    REGISTERCommand command= new REGISTERCommand(messageArr, usersJsonHandler);
+                     command= new REGISTERCommand(messageArr, usersJsonHandler);
                     result = command.execute();
                 }
 
                 connections.send(this.clientID,result);
             }
-            //LOGIN <username> <password>
+
+
             case "LOGIN": {
-                String result = "false";
+                result = "false";
                 if (!isLogged){
-                    LOGINCommand command = new LOGINCommand(messageArr,usersJsonHandler,loggedUsers);
+                    command = new LOGINCommand(messageArr,usersJsonHandler,loggedUsers);
                     result = command.execute();
                 }
                 if (!result.equals("false")){
-                    logginUser = result;
+                    logginUserName = result;
                     isLogged = true;
                     result = "ACK login succeeded";
                 }
@@ -93,20 +97,26 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                 connections.send(this.clientID,result);
             }
 
-            //REQUEST <name> [parameters,…]
             case "REQUEST": {
-                //todo
+                if(messageArr.length>1){
+                    String type=messageArr[1];
+                    command=new REQUESTCommand(type,logginUserName,messageArr,service, usersJsonHandler);
+                    result=command.execute();
+                }
+
+                //                    if (result.hasBroadcase()) {
+                //                        broadcast(result.getBroadcast());
+                //                    }
+                //                }
+                //
+                //                break;
+                //            }
 
             }
 
-            //input is invalid
-            if (!executed){
-                //todo: check what is the requirement for invalid input
-            }
         }
+        return result;
     }
-
-
 
     /**
      * @return true if the connection should be terminated

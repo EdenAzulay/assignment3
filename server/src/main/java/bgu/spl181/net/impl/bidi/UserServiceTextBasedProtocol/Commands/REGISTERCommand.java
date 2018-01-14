@@ -1,4 +1,4 @@
-package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.commands;
+package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Commands;
 
 
 import bgu.spl181.net.impl.dbClasses.User;
