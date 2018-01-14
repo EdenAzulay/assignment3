@@ -1,10 +1,5 @@
 package bgu.spl181.net.srv.commands;
 
-import bgu.spl181.net.impl.dbClasses.DbHandler;
-import bgu.spl181.net.srv.Result;
-
-import java.io.Serializable;
-
 public class REQUESTCommand<String> extends BaseCommand{
 
     public REQUESTCommand(DbHandler dbHandler) {
@@ -12,7 +7,7 @@ public class REQUESTCommand<String> extends BaseCommand{
     }
 
     @Override
-    Result execute() {
+    java.lang.String execute() {
         return null;
     }
 }

@@ -1,16 +1,21 @@
 package bgu.spl181.net.srv.commands;
 
-import bgu.spl181.net.impl.dbClasses.DbHandler;
+import bgu.spl181.net.impl.dbClasses.MoviesJsonHandler;
+import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
 import bgu.spl181.net.srv.Result;
 
-import java.io.Serializable;
-
 public abstract class BaseCommand {
-    protected DbHandler dbHandler;
+    protected MoviesJsonHandler moviesJsonHandler;
+    protected UsersJsonHandler usersJsonHandler;
+    protected String[] messageArr;
+    String result;
 
-    public BaseCommand(DbHandler dbHandler) {
-        this.dbHandler = dbHandler;
+    public BaseCommand(UsersJsonHandler usersJsonHandler, String[] messageArr){
+        this.usersJsonHandler = usersJsonHandler;
+        this.messageArr = messageArr;
     }
 
-    abstract Result execute();
+
+
+    abstract String execute();
 }

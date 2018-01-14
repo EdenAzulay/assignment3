@@ -46,7 +46,7 @@ public class UsersJsonHandler extends JsonHandler<User> {
         return user != null && Objects.equals(user.getPassword(), password);
     }
 
-    private User getUser(String username) {
+    public User getUser(String username) {
         User query = new User();
         query.setUsername(username);
         return this.getEntity(query);

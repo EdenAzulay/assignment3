@@ -3,7 +3,8 @@ package bgu.spl181.net.srv;
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.impl.BBreactor.ConnectionsImpl;
-import bgu.spl181.net.impl.BBtpc.BlockingConnectionHandler;
+import bgu.spl181.net.srv.bidi.BlockingConnectionHandler;
+import bgu.spl181.net.srv.bidi.ConnectionsImpl;
 //import bgu.spl181.net.impl.BBtpc.ConnectionsImpl;
 
 //import com.google.gson.Gson;
@@ -19,6 +20,7 @@ public class TPCServer<T> implements Server<T> {
     private Supplier<BidiMessagingProtocol<T>> protocolFactory;
     private Supplier<MessageEncoderDecoder<T>> encoderDecoderFactory;
     private ServerSocket sock;
+
 
 //    private Gson gson;
 

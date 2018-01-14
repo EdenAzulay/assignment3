@@ -2,51 +2,75 @@ package bgu.spl181.net.impl.dbClasses;
 
 import java.util.Map;
 
+
+import java.util.Objects;
+
+//todo:: fix
+
 public class User {
-    private String userName;
+    private String username;
+    private String type;
     private String password;
-    private Map<String,String> dataBlock;
-    private String[] movies;
-    private String balance; //need to cast to int
+    private String country;
+    //private UserMovie[] movies;
+    private String balance;
 
-
-    public String getUserName() {
-        return userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getPassword() {
-        return password;
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public Map<String, String> getDataBlock() {
-        return dataBlock;
+    public String getUsername() {
+        return this.username;
     }
 
-    public void setDataBlock(Map<String, String> dataBlock) {
-        this.dataBlock = dataBlock;
+    public String getType() {
+        return this.type;
     }
 
-    public String[] getMovies() {
-        return movies;
+    public String getPassword() {
+        return this.password;
     }
 
-    public void setMovies(String[] movies) {
-        this.movies = movies;
+    public String getCountry() {
+        return this.country;
     }
 
     public String getBalance() {
-        return balance;
+        return this.balance;
     }
 
-    public void setBalance(String balance) {
-        this.balance = balance;
+    /*
+    public UserMovie[] getMovies() {
+        return this.movies;
+    }
+    */
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof User))
+            return false;
+
+        User other = (User) obj;
+
+        if (!Objects.equals(other.getUsername(), this.getUsername()))
+            return false;
+
+        return true;
     }
 }

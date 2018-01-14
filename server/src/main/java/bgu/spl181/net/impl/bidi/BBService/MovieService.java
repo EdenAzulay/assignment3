@@ -6,7 +6,7 @@ import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Result;
 import java.util.List;
 import java.util.Map;
 
-public class MovieRentalService implements IService {
+public class MovieService implements IService {
     @Override
     public Result handle(String name, String username, List<String> parameters) {
         return null;

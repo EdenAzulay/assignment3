@@ -1,10 +1,14 @@
 package bgu.spl181.net.srv;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
-import bgu.spl181.net.impl.BBreactor.ConnectionsImpl;
-import bgu.spl181.net.srv.commands.LOGINCommandI;
-import bgu.spl181.net.srv.commands.REGISTERCommandI;
-import bgu.spl181.net.srv.commands.SIGNOUTCommandI;
+import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
+import bgu.spl181.net.srv.bidi.ConnectionsImpl;
+
+import bgu.spl181.net.srv.commands.LOGINCommand;
+
+import bgu.spl181.net.srv.commands.REGISTERCommand;
+
+
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,13 +16,18 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
     private boolean shouldTerminate=false;
     private int clientID;
     private ConnectionsImpl connections;
-    private MovieRentProtocol protocol;
-
-    private ConcurrentHashMap<Integer, String> loggedInUsers;
+    //private MovieRentProtocol protocol;
+    private boolean isLogged;
+    private String logginUser;
     private String commandName;
+    UsersJsonHandler usersJsonHandler;
+    ConcurrentHashMap<String,String> loggedUsers;
 
-    public UserServiceTextBasedProtocol(){
-
+    public UserServiceTextBasedProtocol(UsersJsonHandler usersJsonHandler, ConcurrentHashMap<String,String> loggedUsers){
+        this.loggedUsers=loggedUsers;
+        this.usersJsonHandler = usersJsonHandler;
+        isLogged=false;
+        logginUser="";
     }
 
     public void start(int connectionId, Connections<String> connections){
@@ -39,70 +48,53 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
 }
     private Result handleMessage(String message) {
 
-        //calculating how many spaces in message
-        int numOfSpaces;
-        String tmp = message;
-        tmp.replace(" ", "");
-        numOfSpaces = message.length() - tmp.length();
+        String[] messageArr = message.split("\\s+");
 
-        //get the commandName
-        int spaceIndex = message.indexOf(" ");
-        if (numOfSpaces == 0) {
-            commandName = message;
-        } else if (numOfSpaces > 0) {
-            commandName = message.substring(0, spaceIndex);
+        if(message.length()>0){
+            commandName = messageArr[0];
         }
-
-        boolean executed = false;
-        String userName,password;
-        String dataBlock ="";
 
         switch (commandName) {
             //SIGNOUT
             case "SIGNOUT": {
-                SIGNOUTCommandI command = new SIGNOUTCommandI<>();
-                executed = true;
-                command.execute();
+                if (messageArr.length == 1 && isLogged){
+                    isLogged = false;
+                    loggedUsers.remove(logginUser);
+                    logginUser = "";
+                    connections.send(this.clientID, "ACK signout succeeded");
+                }
+                else{
+                    connections.send(this.clientID, "ERROR signout failed");
+                }
             }
             //REGISTER <username> <password> [Data block,…]
             case "REGISTER": {
-                if (numOfSpaces>=2){                //making sure the input is valid
-
-                    message =  message.substring(spaceIndex + 1);
-                    spaceIndex = message.indexOf(" ");
-                    userName = message.substring(0,spaceIndex);
-
-                    message =  message.substring(spaceIndex + 1);
-                    spaceIndex = message.indexOf(" ");
-                    password = message.substring(0,spaceIndex);
-
-                    if (numOfSpaces>2){ //todo: check how to handle the dataBlock
-                        message =  message.substring(spaceIndex + 1);
-                        dataBlock = message;
-                    }
-                    REGISTERCommandI command = new REGISTERCommandI(userName,password,dataBlock, db);
-                    executed = true;
-                    Result result = command.execute();
-                    return result;
+                String result = "ERROR registration failed";
+                if (!isLogged) {
+                    REGISTERCommand command = new REGISTERCommand(messageArr, usersJsonHandler);
+                    result = command.execute();
                 }
+
+                connections.send(this.clientID,result);
             }
             //LOGIN <username> <password>
             case "LOGIN": {
-                if (numOfSpaces==2) {                //making sure the input is valid
-                    message = message.substring(spaceIndex + 1);
-                    spaceIndex = message.indexOf(" ");
-                    userName = message.substring(0, spaceIndex);
-
-                    message = message.substring(spaceIndex + 1);
-                    spaceIndex = message.indexOf(" ");
-                    password = message.substring(0, spaceIndex);
-
-                    LOGINCommandI command = new LOGINCommandI(userName,password);
-                    executed = true;
-                    command.execute();
+                String result = "false";
+                if (!isLogged){
+                    LOGINCommand command = new LOGINCommand(messageArr,usersJsonHandler,loggedUsers);
+                    result = command.execute();
                 }
+                if (!result.equals("false")){
+                    logginUser = result;
+                    isLogged = true;
+                    result = "ACK login succeeded";
+                }
+                else
+                    result = "ERROR login failed";
 
+                connections.send(this.clientID,result);
             }
+
             //REQUEST <name> [parameters,…]
             case "REQUEST": {
                 //todo

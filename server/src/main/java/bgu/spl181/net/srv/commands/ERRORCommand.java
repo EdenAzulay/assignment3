@@ -1,9 +1,6 @@
 package bgu.spl181.net.srv.commands;
 
 
-import bgu.spl181.net.impl.dbClasses.DbHandler;
-import bgu.spl181.net.srv.Result;
-
 public class ERRORCommand<String> extends BaseCommand{
 
     public ERRORCommand(DbHandler dbHandler) {
@@ -11,7 +8,7 @@ public class ERRORCommand<String> extends BaseCommand{
     }
 
     @Override
-    Result execute() {
+    java.lang.String execute() {
         return null;
     }
 }
