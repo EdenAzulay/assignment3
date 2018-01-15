@@ -128,7 +128,31 @@ public class MovieService implements IService {
                 return
             }
             case "return" :{
-                break;
+                if(messageArr.length>2) {
+                    boolean returnIsConfirm=false;
+                    User user=usersJsonHandler.getUser(username);
+                    String movieToReturn = messageArr[2];
+
+                    //check if the user has that movie
+                    for (String userMovie:user.getMovies() ) {
+                        if (userMovie == movieToReturn)
+                            returnIsConfirm =true;
+                    }
+
+                    //check if the movie exist
+                    Movie movie = moviesJsonHandler.getMovie(movieToReturn);
+                    if (movie != null)
+                        returnIsConfirm = true;
+
+                    if (!returnIsConfirm)
+                        return "ERROR request "+requestType +" failed";
+
+                    return "ACK return "+movieToReturn+" success";
+                    //todo : broadcast
+
+
+                    break;
+                }
             }
             //admin permission
             case "addMovie" :{
