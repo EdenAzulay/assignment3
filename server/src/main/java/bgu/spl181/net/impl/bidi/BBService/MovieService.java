@@ -18,8 +18,8 @@ public class MovieService implements IService {
     }
 
     @Override
-    public Result handle(String name, String username, String[] parameters) {
-        return null;
+    public String handle(String name, String username, String[] parameters) {
+        return null; //TODO-should be null return or implement all request options here?
     }
 
     @Override

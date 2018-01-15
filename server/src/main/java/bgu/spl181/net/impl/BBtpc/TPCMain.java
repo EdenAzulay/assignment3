@@ -39,6 +39,4 @@ public class TPCMain {
                 () -> new UserServiceTextBasedProtocol(usersJsonHandler, loggedUsers, movieService),
                 LineMessageEncoderDecoder::new).serve();
     }
-
-    //TODO- fix movieRentalService. check if needed Iservice??!
 }

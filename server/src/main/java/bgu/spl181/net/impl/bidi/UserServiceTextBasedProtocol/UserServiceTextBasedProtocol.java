@@ -40,7 +40,8 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
     public void process(String message){
 
         String result = handleMessage(message);
-        connections.send(clientID,"answer");
+
+        connections.send(clientID,result);
 
 }
     private String handleMessage(String message) {
@@ -54,7 +55,7 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
         }
 
         switch (commandName) {
-            //SIGNOUT
+
             case "SIGNOUT": {
                 if (messageArr.length == 1 && isLogged){
                     isLogged = false;
@@ -66,8 +67,9 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                     connections.send(this.clientID, "ERROR signout failed");
                 }
                 //TODO-CHECK WHAT SHOULD BE RESULT
-            }
 
+                break;
+            }
 
             case "REGISTER": {
                 result = "ERROR registration failed";
@@ -77,8 +79,10 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                 }
 
                 connections.send(this.clientID,result);
-            }
 
+                break;
+
+            }
 
             case "LOGIN": {
                 result = "false";
@@ -95,6 +99,8 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                     result = "ERROR login failed";
 
                 connections.send(this.clientID,result);
+
+                break;
             }
 
             case "REQUEST": {
@@ -108,9 +114,8 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                 //                        broadcast(result.getBroadcast());
                 //                    }
                 //                }
-                //
-                //                break;
-                //            }
+
+                break;
 
             }
 

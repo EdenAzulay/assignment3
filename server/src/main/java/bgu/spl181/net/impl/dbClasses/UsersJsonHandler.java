@@ -1,7 +1,6 @@
 package bgu.spl181.net.impl.dbClasses;
 
-import bgu.spl181.net.impl.bidi.db.JsonDBHandler;
-import bgu.spl181.net.impl.bidi.db.entities.users.User;
+
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 

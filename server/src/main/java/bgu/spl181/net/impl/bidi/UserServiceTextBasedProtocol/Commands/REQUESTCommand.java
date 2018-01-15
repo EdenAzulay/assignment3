@@ -17,13 +17,19 @@ public class REQUESTCommand extends BaseCommand{
          this.userName=username;
          this.service=service;
          this.usersJsonHandler=usersJsonHandler;
+         this.messageArr=messageArr;
     }
 
     @Override
-    public java.lang.String execute() {
-        return null;
+    public String execute() {
+
+        if (isLogged)
+            return service.handle(type, userName, messageArr);
+
+        else
+            return "ERROR request " + type + " failed";
     }
-    //TODO- FINISH EXECUTE.
+
 }
 
 

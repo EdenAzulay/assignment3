@@ -1,7 +1,8 @@
 package bgu.spl181.net.impl.dbClasses;
 
-import com.google.gson.JsonObject;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ public abstract class JsonHandler<T> {
         this.gson = new Gson();
         this.readWriteLock = readWriteLock;
     }
-
     public abstract void addRecord(T record);
 
     public abstract ArrayList<T> readAll();
@@ -27,8 +27,8 @@ public abstract class JsonHandler<T> {
         for (T current : this.readAll()) {
             if (current.equals(record))
                 output = true;
-            return output;
         }
+        return output;
     }
 
     protected JsonObject getJsonObject(){
