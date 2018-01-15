@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 public abstract class JsonHandler<T> {
     protected Gson gson;
     protected String path;
-    private ReadWriteLock readWriteLock;
+    protected ReadWriteLock readWriteLock;
 
     public JsonHandler(String path, ReadWriteLock readWriteLock) {
         this.path = path;

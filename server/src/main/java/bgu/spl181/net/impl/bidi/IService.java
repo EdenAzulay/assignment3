@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface IService {
-    String handle(String name, String username, String[] parameters);
+
+    String handle(String username, String[] parameters);
 
     boolean validateDataBlock(Map<String, String> dataBlock);
+
 }

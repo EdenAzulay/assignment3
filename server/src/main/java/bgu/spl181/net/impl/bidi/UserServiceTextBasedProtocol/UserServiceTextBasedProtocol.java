@@ -57,17 +57,14 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
         switch (commandName) {
 
             case "SIGNOUT": {
-                if (messageArr.length == 1 && isLogged){
+                if (messageArr.length == 1 && isLogged) {
                     isLogged = false;
                     loggedUsers.remove(logginUserName);
                     logginUserName = "";
-                    connections.send(this.clientID, "ACK signout succeeded");
+                    result= "ACK signout succeeded";
                 }
-                else{
-                    connections.send(this.clientID, "ERROR signout failed");
-                }
-                //TODO-CHECK WHAT SHOULD BE RESULT
-
+                else
+                    result = "ERROR signout failed";
                 break;
             }
 
@@ -77,11 +74,7 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                      command= new REGISTERCommand(messageArr, usersJsonHandler);
                     result = command.execute();
                 }
-
-                connections.send(this.clientID,result);
-
                 break;
-
             }
 
             case "LOGIN": {
@@ -97,16 +90,12 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
                 }
                 else
                     result = "ERROR login failed";
-
-                connections.send(this.clientID,result);
-
                 break;
             }
 
             case "REQUEST": {
                 if(messageArr.length>1){
-                    String type=messageArr[1];
-                    command=new REQUESTCommand(type,logginUserName,messageArr,service, usersJsonHandler);
+                    command=new REQUESTCommand(logginUserName,messageArr,service, usersJsonHandler,connections);
                     result=command.execute();
                 }
 

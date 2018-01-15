@@ -12,7 +12,7 @@ public class User {
     private String type;
     private String password;
     private String country;
-    //private UserMovie[] movies;
+    private String[] movies;
     private String balance;
 
     public void setUsername(String username) {
@@ -55,11 +55,6 @@ public class User {
         return this.balance;
     }
 
-    /*
-    public UserMovie[] getMovies() {
-        return this.movies;
-    }
-    */
 
     @Override
     public boolean equals(Object obj) {
@@ -72,5 +67,13 @@ public class User {
             return false;
 
         return true;
+    }
+
+    public String[] getMovies() {
+        return movies;
+    }
+
+    public void setMovies(String[] movies) {
+        this.movies = movies;
     }
 }

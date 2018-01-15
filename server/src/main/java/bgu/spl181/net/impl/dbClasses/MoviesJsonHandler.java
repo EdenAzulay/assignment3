@@ -36,4 +36,14 @@ public class MoviesJsonHandler extends JsonHandler<Movie> {
 
         this.writeJsonObject(movies, ROOT_KEY);
     }
+
+    public Movie getMovie(String movieName) {
+        Movie query = new Movie();
+        query.setMovieName(movieName);
+        return this.getEntity(query);
+    }
+
+    public boolean isMovieExists(String movieName){
+        return getMovie(movieName) != null;
+    }
 }
