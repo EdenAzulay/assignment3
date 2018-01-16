@@ -15,9 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<String> {
     private boolean shouldTerminate=false;
     private int clientID;
-    private ConnectionsImpl connections;
+    private Connections<String> connections;
     //private MovieRentProtocol protocol;
-    private boolean isLogged;
     private String logginUserName;
     private UsersJsonHandler usersJsonHandler;
     private ConcurrentHashMap<String,String> loggedUsers;
@@ -26,27 +25,30 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
     public UserServiceTextBasedProtocol(UsersJsonHandler usersJsonHandler, ConcurrentHashMap<String,String> loggedUsers, IService service){
         this.loggedUsers=loggedUsers;
         this.usersJsonHandler = usersJsonHandler;
-        isLogged=false;
-        logginUserName="";
+        logginUserName=null;
         this.service=service;
     }
 
     public void start(int connectionId, Connections<String> connections){
         clientID=connectionId;
-        this.connections=(ConnectionsImpl)connections;
+        this.connections=connections;
 
     }
 
-    public void process(String message){
+    public void process(String message) {
 
-        String result = handleMessage(message);
+        ResultObj result = handleMessage(message);
 
-        connections.send(clientID,result);
+        connections.send(clientID, result.getResponse());
 
-}
-    private String handleMessage(String message) {
+        if (result.hasBroadcase())
+            broadcast(result);
+
+    }
+
+    private ResultObj handleMessage(String message) {
         String commandName=null;
-        String result=null;
+        ResultObj result=null;
         String[] messageArr = message.split("\\s+");
         BaseCommand command=null;
 
@@ -57,55 +59,39 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
         switch (commandName) {
 
             case "SIGNOUT": {
-                if (messageArr.length == 1 && isLogged) {
-                    isLogged = false;
+                if (messageArr.length == 1 && isLogged()) {
                     loggedUsers.remove(logginUserName);
-                    logginUserName = "";
-                    result= "ACK signout succeeded";
+                    logginUserName = null;
+                    return new ResultObj(ResultObjType.ACK,"ACK signout succeeded");
                 }
-                else
-                    result = "ERROR signout failed";
-                break;
+
+                return new ResultObj(ResultObjType.ERROR,"ERROR signout failed");
             }
 
             case "REGISTER": {
-                result = "ERROR registration failed";
-                if (!isLogged) {
-                     command= new REGISTERCommand(messageArr, usersJsonHandler);
-                    result = command.execute();
-                }
+
+                command= new REGISTERCommand(messageArr, usersJsonHandler,service,isLogged());
+                result = command.execute();
+
                 break;
             }
 
             case "LOGIN": {
-                result = "false";
-                if (!isLogged){
-                    command = new LOGINCommand(messageArr,usersJsonHandler,loggedUsers);
-                    result = command.execute();
-                }
-                if (!result.equals("false")){
-                    logginUserName = result;
-                    isLogged = true;
-                    result = "ACK login succeeded";
-                }
-                else
-                    result = "ERROR login failed";
+                command = new LOGINCommand(messageArr, usersJsonHandler, loggedUsers, isLogged(), clientID);
+                result = command.execute();
+
+                if (result.getType() == ResultObjType.ACK) logginUserName = messageArr[1];
+
                 break;
             }
 
             case "REQUEST": {
-                if(messageArr.length>1){
-                    command=new REQUESTCommand(logginUserName,messageArr,service, usersJsonHandler,connections);
-                    result=command.execute();
+                if (messageArr.length > 1) {
+                    command = new REQUESTCommand(logginUserName, messageArr, service, usersJsonHandler, isLogged());
+                    result = command.execute();
+
+                    break;
                 }
-
-                //                    if (result.hasBroadcase()) {
-                //                        broadcast(result.getBroadcast());
-                //                    }
-                //                }
-
-                break;
-
             }
 
         }
@@ -118,6 +104,15 @@ public class UserServiceTextBasedProtocol implements BidiMessagingProtocol<Strin
     public boolean shouldTerminate(){
         return shouldTerminate;
     }
+
+    public boolean isLogged(){ return logginUserName != null;}
+
+    public void broadcast(ResultObj result) {
+        String broadcastMessage = result.getBroadcast();
+        for (String username : this.loggedUsers.keySet())
+            this.connections.send(Integer.parseInt(this.loggedUsers.get(username)), broadcastMessage);
+    }
+
 }
 
 

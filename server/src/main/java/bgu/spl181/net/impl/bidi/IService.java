@@ -1,13 +1,12 @@
 package bgu.spl181.net.impl.bidi;
 
-import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Result;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.ResultObj;
 
-import java.util.List;
 import java.util.Map;
 
 public interface IService {
 
-    String handle(String username, String[] parameters);
+    ResultObj handle(String username, String[] parameters);
 
     boolean validateDataBlock(Map<String, String> dataBlock);
 

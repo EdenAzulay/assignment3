@@ -1,18 +1,18 @@
 package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol;
 
-public class Result {
+public class ResultObj {
     private String response;
     private String broadcast;
-    private String resultType ;
+    private ResultObjType resultObjType ;
 
-    public Result(String resultType, String response) {
-        this.resultType =resultType;
+    public ResultObj(ResultObjType resultType, String response) {
+        this.resultObjType =resultType;
         this.response = response;
         this.broadcast = null;
     }
 
-    public Result(String resultType , String response, String broadcast) {
-        this(resultType, response);
+    public ResultObj(ResultObjType resultObjType , String response, String broadcast) {
+        this(resultObjType, response);
         this.broadcast = broadcast;
     }
 
@@ -20,8 +20,8 @@ public class Result {
         return this.broadcast != null;
     }
 
-    public String getType() {
-        return this.resultType;
+    public ResultObjType getType() {
+        return this.resultObjType;
     }
 
     public String getResponse() {

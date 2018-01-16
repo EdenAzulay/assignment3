@@ -1,35 +1,49 @@
 package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Commands;
 
 
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.ResultObj;
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.ResultObjType;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class LOGINCommand extends BaseCommand {
-    ConcurrentHashMap<String,String> loggedUsers;
-    public LOGINCommand(String[] messageArr, UsersJsonHandler usersJsonHandler, ConcurrentHashMap loggedUsers) {
+    private String ErrorOutput = "ERROR login failed";
+    private String SuccessOutput="ACK login succeeded";
+    private Map<String,String> loggedUsers;
+    private boolean isLogged;
+    private int clientID;
+
+    public LOGINCommand(String[] messageArr, UsersJsonHandler usersJsonHandler, Map<String,String> loggedUsers, boolean isLogged, int clientID) {
         super(usersJsonHandler,messageArr);
+
+        this.loggedUsers=loggedUsers;
+        this.isLogged=isLogged;
+        this.clientID=clientID;
     }
 
     @Override
-    public String execute() {
-        boolean loginSucced = false;
+    public ResultObj execute() {
+        if(isLogged)
+            return new ResultObj(ResultObjType.ERROR,ErrorOutput);
 
-        if(messageArr.length == 3){
-            loginSucced = usersJsonHandler.validateCredentials(messageArr[1],messageArr[2]);
-        }
+        if(this.messageArr.length!=3)
+            return new ResultObj(ResultObjType.ERROR,ErrorOutput);
+
+        if(!usersJsonHandler.validateCredentials(messageArr[1],messageArr[2]))
+            return new ResultObj(ResultObjType.ERROR,ErrorOutput);
+
         for (String s : loggedUsers.keySet()) {
             if(s.equals(messageArr[1]))
-                loginSucced=false;
-            break;
+                return new ResultObj(ResultObjType.ERROR,ErrorOutput);
         }
 
-        if (loginSucced) {
-            this.loggedUsers.put(messageArr[1],messageArr[1]);
-            return messageArr[1];
-        }
-        else
-            return "false";
+        if(loggedUsers.putIfAbsent(messageArr[1],String.valueOf(clientID))!=null)
+            return new ResultObj(ResultObjType.ERROR,ErrorOutput);
+
+
+        return new ResultObj(ResultObjType.ACK,SuccessOutput);
 
     }
 }

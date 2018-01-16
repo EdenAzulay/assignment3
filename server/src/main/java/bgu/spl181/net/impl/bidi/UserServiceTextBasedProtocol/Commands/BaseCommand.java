@@ -1,5 +1,6 @@
 package bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Commands;
 
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.ResultObj;
 import bgu.spl181.net.impl.dbClasses.MoviesJsonHandler;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
 
@@ -16,5 +17,5 @@ public abstract class BaseCommand {
 
 
 
-    public abstract String execute();
+    public abstract ResultObj execute();
 }

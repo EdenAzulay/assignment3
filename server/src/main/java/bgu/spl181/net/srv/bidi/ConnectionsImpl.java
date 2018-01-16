@@ -1,5 +1,6 @@
 package bgu.spl181.net.srv.bidi;
 
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.ResultObj;
 import bgu.spl181.net.srv.bidi.ConnectionHandler;
 import bgu.spl181.net.api.bidi.Connections;
 
@@ -37,12 +38,14 @@ public class ConnectionsImpl<T> implements Connections<T> {
 
     //Send a message to all the logged in clients.
     @Override
-    public void broadcast(T msg) {
+    public void broadcast(ResultObj result, Map<String,String> loggedinUsers) {
+/*        String broadcastMsg = result.getBroadcast();
+
         for (Map.Entry<Integer, ConnectionHandler<T>> entry : connectedClientsCHMap.entrySet()) {
             ConnectionHandler<T> ch = entry.getValue();
-            if(ch!=null)
+            if(ch!=null && ch.)
                 ch.send(msg);
-        }
+        }*/
     }
 
 
