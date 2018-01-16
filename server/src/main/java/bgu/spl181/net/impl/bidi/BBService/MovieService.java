@@ -7,10 +7,7 @@ import bgu.spl181.net.impl.dbClasses.Movie;
 import bgu.spl181.net.impl.dbClasses.MoviesJsonHandler;
 import bgu.spl181.net.impl.dbClasses.User;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class MovieService implements IService {
@@ -234,11 +231,13 @@ public class MovieService implements IService {
                 try {
                     for (int i = 2; i < messageArr.length; i++)
                         movieName = movieName + messageArr[i] + " ";
-                } catch (Exception e) {
+                }
+
+                catch (Exception e) {
                     return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
                 }
 
-                Movie movie=(moviesJsonHandler.getMovie(movieName);
+                Movie movie=(moviesJsonHandler.getMovie(movieName));
 
                 if(movie==null)
                     return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
@@ -273,7 +272,7 @@ public class MovieService implements IService {
                 if(Integer.parseInt(priceStr)<=0)
                     return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
 
-                Movie movie=(moviesJsonHandler.getMovie(movieName);
+                Movie movie=(moviesJsonHandler.getMovie(movieName));
 
                 if(movie==null)
                     return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
@@ -289,6 +288,7 @@ public class MovieService implements IService {
 
             //invalid input
             default:
+                return new ResultObj(ResultObjType.ERROR, "ERROR request failed");
 
         }
     }
