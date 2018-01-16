@@ -46,4 +46,10 @@ public class MoviesJsonHandler extends JsonHandler<Movie> {
     public boolean isMovieExists(String movieName){
         return getMovie(movieName) != null;
     }
+
+    public void removeMovie(String name){
+        ArrayList<Movie> arr =this.readAll();
+        arr.remove(this.getMovie(name));
+        this.writeJsonObject(arr,this.ROOT_KEY);
+    }
 }

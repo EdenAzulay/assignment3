@@ -8,6 +8,7 @@ import bgu.spl181.net.impl.dbClasses.MoviesJsonHandler;
 import bgu.spl181.net.impl.dbClasses.User;
 import bgu.spl181.net.impl.dbClasses.UsersJsonHandler;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -193,64 +194,103 @@ public class MovieService implements IService {
             case "addMovie": {
                 if (!isAdmin)
                     return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
+                String movieName,amount,price,bannedCountries;
+                String[] bannedCountriesArr;
 
-
-                String movieName = "";
-                String amountStr, priceStr;
-                String[] bannedCountries;
-                int movieNameFound = 0; // stop in 2
-                try {
-                    for (int i = 2; i < messageArr.length; i++) {
-                        if (movieNameFound<2 && messageArr[i].indexOf('"')!=-1) // if contain '"'
-                            movieNameFound++;
-
-                        if (movieNameFound<2)
-                            movieName = movieName + " "+ messageArr[i];
-                        if
-
-                        else{
-                            amountStr =
-
-                        }
-
-
-
-
-
-                    }
-
-
-                    ///
+                try{
                     String messageListBeforeFixing = Arrays.toString(messageArr);
-                    String messageList=messageListBeforeFixing.substring(messageListBeforeFixing.indexOf('"'),messageListBeforeFixing.length());
-                    String movieName=messageList.substring(1,messageList.indexOf('"'));
-                    String amountStr=messageList.
-
+                    String messageList=messageListBeforeFixing.substring(messageListBeforeFixing.indexOf('"')+1,messageListBeforeFixing.length());
+                    movieName=messageList.substring(0,messageList.indexOf('"'));
+                    messageList=messageList.substring(messageList.indexOf('"')+1,messageList.length());
+                    bannedCountries=messageList.substring(messageList.indexOf('"'),messageList.length());
+                    bannedCountriesArr=bannedCountries.split(" ");
+                    messageList=messageList.substring(0,messageList.indexOf('"'));
+                    amount=messageList.substring(0,messageList.indexOf(' '));
+                    price= messageList.substring(messageList.indexOf(' ')+1,messageList.length());
 
                 }
                 catch (Exception e) {
                     return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
                 }
+
+                Movie movie= new Movie();
+                movie.setAvailbleAmount(amount);
+                movie.setMovieName(movieName);
+                movie.setBannedCountries(bannedCountriesArr);
+                movie.setMoviePrice(price);
+
+                moviesJsonHandler.addRecord(movie);
+
+                return new ResultObj(ResultObjType.ACK,"ACK adddmovie " + movieName + " success",
+                        "BROADCAST movie "+ '"' + movieName+ '"' + " " + amount + " " + price);
+
             }
 
             case "remmovie": {
                 if (!isAdmin)
-                    return new ResultObj(ResultObjType.ERROR,"ERROR request " + requestType + " failed");
+                    return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
 
-                break;
+                String movieName = "";
+                try {
+                    for (int i = 2; i < messageArr.length; i++)
+                        movieName = movieName + messageArr[i] + " ";
+                } catch (Exception e) {
+                    return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
+                }
+
+                Movie movie=(moviesJsonHandler.getMovie(movieName);
+
+                if(movie==null)
+                    return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
+
+                if(!movie.getAvailbleAmount().equals(movie.getTotalAmount()))
+                    return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
+
+
+                moviesJsonHandler.removeMovie(movieName);
+
+                return new ResultObj(ResultObjType.ACK, "ACK remmovie "+movieName+" success",
+                        "BROADCAST movie "+ movieName +" removed");
             }
+
+
             case "changePrice": {
                 if (!isAdmin)
                     return new ResultObj(ResultObjType.ERROR,"ERROR request " + requestType + " failed");
+                String priceStr,movieName;
+                String messageStr= Arrays.toString(messageArr);
+                priceStr=messageStr.substring(messageStr.lastIndexOf(" "),messageStr.length());
+                try{
+                    priceStr=messageStr.substring(messageStr.lastIndexOf(" "),messageStr.length());
+                    messageStr=messageStr.substring(0,messageStr.lastIndexOf(" "));
+                    movieName=messageStr.substring(messageStr.lastIndexOf(" "),messageStr.length());
+                }
+                catch (Exception e){
+                    return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
 
-                break;
+                }
+
+                if(Integer.parseInt(priceStr)<=0)
+                    return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
+
+                Movie movie=(moviesJsonHandler.getMovie(movieName);
+
+                if(movie==null)
+                    return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
+
+                if(!movie.getAvailbleAmount().equals(movie.getTotalAmount()))
+                    return new ResultObj(ResultObjType.ERROR, "ERROR request " + requestType + " failed");
+
+                movie.setMoviePrice(priceStr);
+
+                return new ResultObj(ResultObjType.ACK,"ACK return " + movieName + " success",
+                        "BROADCAST movie "+ '"' + movieName+ '"' + " " + movie.getAvailbleAmount() + " " +priceStr);
             }
+
             //invalid input
             default:
 
         }
-
-        return;
     }
 
     @Override
