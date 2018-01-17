@@ -15,9 +15,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class TPCMain {
 
     public static void main(String[] args) {
-        int port;
+        int port=0;
         try{
-            port=Integer.parseInt(args[0]);
+            //port=Integer.parseInt(args[0]);
         }
         catch (NumberFormatException ex){
             ex.printStackTrace();
@@ -35,7 +35,7 @@ public class TPCMain {
 
 
         Server.threadPerClient(
-                port, //port //TODO-FIX THIS
+                port,
                 () -> new UserServiceTextBasedProtocol(usersJsonHandler, loggedUsers, movieService),
                 LineMessageEncoderDecoder::new).serve();
     }
